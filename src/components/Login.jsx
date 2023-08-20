@@ -1,6 +1,6 @@
 import axios from "axios";
 import swAlert from "@sweetalert/with-react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Redirect } from "react-router-dom";
 
 function Login() {
   const history = useHistory();
@@ -41,27 +41,46 @@ function Login() {
         console.log(res.data);
         const tokenRecibido = res.data.token;
         localStorage.setItem("token", tokenRecibido);
-        history.push('/listado')
+        history.push("/listado");
       });
   };
 
+  let token = localStorage.getItem("token");
+
   return (
     <>
-      <h2>Formulario Login</h2>
-      <form onSubmit={submitHandler}>
-        <label>
-          <span>Correo Electronico</span>
-          <br />
-          <input type="text" name="email" />
-        </label>
-        <br />
-        <label>
-          <span>Contraseña</span> <br />
-          <input type="password" name="password" />
-        </label>
-        <br />
-        <button type="submit">Ingresar</button>
-      </form>
+      {token && <Redirect to="/listado" />}
+      <div>
+        <div className="mb-3 container mt-3">
+          <h2>Formulario Login</h2>
+          <form onSubmit={submitHandler}>
+            <label className="form-label ">
+              <span>Correo Electronico</span>
+              <br />
+              <input
+                type="text"
+                name="email"
+                placeholder="name@example.com"
+                className="form-control  rounded-3"
+              />
+            </label>
+            <br />
+            <label f className="form-label">
+              <span>Contraseña</span> <br />
+              <input
+                type="password"
+                name="password"
+                className="form-control"
+                aria-describedby="passwordHelpBlock"
+              />
+            </label>
+            <br />
+            <button type="submit" className="btn btn-success">
+              Ingresar
+            </button>
+          </form>
+        </div>
+      </div>
     </>
   );
 }
