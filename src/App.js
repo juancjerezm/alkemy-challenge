@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import Listado from "./components/Listado";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Detalle from "./components/Detalle";
 
 //Styles
 import "./css/bootstrap.min.css";
@@ -18,7 +19,7 @@ function App() {
         <Switch>
           <Route exact path="/" component={Login} />
           <Route path="/listado" component={Listado} />
-          <Route />
+          <Route path="/detalle" component={Detalle} />
         </Switch>
       </div>
       <Footer />
