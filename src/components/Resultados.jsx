@@ -3,45 +3,46 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import swal from "@sweetalert/with-react";
 
-function Listado(props) {
+function Resultados() {
   let token = sessionStorage.getItem("token");
+  let query = new URLSearchParams(window.location.search);
+  let keyword = query.get("keyWord");
+  console.log(keyword);
+  const [moviResults, setMovieResults] = useState([]);
 
-  const [moviesList, setMoviesList] = useState([]);
+  //   https://api.themoviedb.org/3/search/movie?api_key=32311e6f3fda844baff01df6360d0df1&language=es-ES&query=spider
 
   useEffect(() => {
-    const endPoint =
-      "https://api.themoviedb.org/3/discover/movie?api_key=32311e6f3fda844baff01df6360d0df1&language=es-ES&page=1";
+    const endPoint = `https://api.themoviedb.org/3/search/movie?api_key=32311e6f3fda844baff01df6360d0df1&language=es-ES&query=${keyword}`;
     axios
       .get(endPoint)
       .then((res) => {
-        const apiData = res.data.results;
-        setMoviesList(apiData);
+        const apiResults = res.data.results;
+        if (apiResults.length === 0) {
+          swal(<h2>Tu busqueda no arroja resultados</h2>);
+        }
+        setMovieResults(apiResults);
       })
       .catch((error) => {
-        swal(<h2>Error Intenta mas tarde</h2>);
+        console.log(error);
       });
-  }, [setMoviesList]);
+  }, [keyword]);
+  console.log(moviResults);
 
   return (
     <>
       {!token && <Redirect to="/" />}
+      {moviResults.length === 0 && <h3>No existen resultado</h3>}
       <div className="row">
-        {moviesList.map((movie, idx) => {
+        {moviResults.map((movie, idx) => {
           return (
-            <div className="col-3" key={idx}>
+            <div className="col-4" key={idx}>
               <div className="card my-4" style={{ width: "18rem" }}>
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   className="card-img-top"
                   alt="..."
                 />
-                <button
-                  className="favourite-btn "
-                  onClick={props.addOrRemoveFavs}
-                  data-movie-id={movie.id}
-                >
-                  🖤
-                </button>
                 <div className="card-body">
                   <h5 className="card-title">
                     {movie.title.substring(0, 30)}...
@@ -65,4 +66,4 @@ function Listado(props) {
   );
 }
 
-export default Listado;
+export default Resultados;

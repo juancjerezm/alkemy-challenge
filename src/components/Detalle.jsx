@@ -16,7 +16,7 @@ function Detalle() {
       .then((res) => {
         const apiData = res.data;
         setMovieDetail(apiData);
-        console.log(apiData);
+        
       })
       .catch((error) => {
         console.log(error);
